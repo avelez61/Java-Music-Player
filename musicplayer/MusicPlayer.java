@@ -7,6 +7,7 @@ import javax.sound.sampled.Clip;
 
 public class MusicPlayer {
 	private Clip clip;
+	private boolean looping;
 	
 	public MusicPlayer(String filePath) {
 		try {
@@ -16,11 +17,35 @@ public class MusicPlayer {
 			this.clip.open(audioStream);
 		} catch(Exception e) {
 			System.out.println("Error reading audio file");
+		}		
+		this.clip.setLoopPoints(0, this.clip.getFrameLength() - 1);
+		this.looping = false;
+	}
+	
+	public boolean isLooping() {
+		return this.looping;
+	}
+	
+	public void loop() {
+		if (!this.looping) {
+			this.looping = true;
+		}
+		else {
+			
+			this.looping = false;
 		}
 	}
 	
 	public void play() {
 		this.clip.start();
+		
+		// Pausing clears loop status so it must be re-enabled in play
+		if (this.looping) {
+			this.clip.loop(Clip.LOOP_CONTINUOUSLY);
+		}
+		else {
+			this.clip.loop(0);
+		}
 	}
 	
 	public void stop() {
@@ -29,7 +54,7 @@ public class MusicPlayer {
 	
 	public void restart() {
 		this.clip.setMicrosecondPosition(0);
-		this.clip.start();
+		this.play();
 	}
 	
 	public void close() {

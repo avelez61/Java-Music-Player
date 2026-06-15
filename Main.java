@@ -27,6 +27,15 @@ public class Main {
 				System.out.println("Restarted song");
 				player.restart();
 			}
+			else if (input.equals("LOOP")) {
+				if (!player.isLooping()) {
+					System.out.println("Enabled Looping");
+				}
+				else {
+					System.out.println("Disabled Looping");
+				}
+				player.loop();
+			}
 			else if (input.equals("EXIT")) {
 				running = false;
 			}
