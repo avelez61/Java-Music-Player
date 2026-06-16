@@ -45,13 +45,13 @@ public class Main {
 				player.skipBack();
 			}
 			else if (input.equals("ADD SONG")) {
-				System.out.println("Enter a song title: ");
+				System.out.print("Enter a song title: ");
 				String title = scanner.nextLine();
 				
-				System.out.println("Enter the artist: ");
+				System.out.print("Enter the artist: ");
 				String artist = scanner.nextLine();
 				
-				System.out.println("Enter the file path: ");
+				System.out.print("Enter the file path: ");
 				String filePath = scanner.nextLine();
 				
 				System.out.println("Added Song");
@@ -65,6 +65,7 @@ public class Main {
 				player.removeSong(index);
 			}
 			else if (input.equals("SKIP")) {
+				System.out.println("Skipped Song");
 				player.skipSong();
 			}
 			

@@ -78,7 +78,7 @@ public class MusicPlayer implements LineListener {
 	public void play() {
 		if (playList.isEmpty()) { return; }
 		
-		if (clip == null || triggerAutoPlay) {
+		if ((clip == null || triggerAutoPlay)) {
 			this.loadSong(playList.get(this.currentSongIndex));
 		}
 		clip.start();
@@ -144,7 +144,17 @@ public class MusicPlayer implements LineListener {
 	}
 	
 	public void skipSong() {
-
+		if (playList.isEmpty()) { return; }
+		if (clip == null) { return; }
+		
+		disableAutoPlay = true;
+		currentSongIndex++;
+		clip.close();
+		clip = null;
+		if (currentSongIndex < playList.size()) {
+			play();
+		}
+		disableAutoPlay = false;
 	}
 	
 	public void close() {
