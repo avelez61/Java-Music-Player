@@ -36,6 +36,12 @@ public class Main {
 				}
 				player.loop();
 			}
+			else if (input.equals("SKIP FORWARD")) {
+				player.skipForward();
+			}
+			else if (input.equals("SKIP BACK")) {
+				player.skipBack();
+			}
 			else if (input.equals("EXIT")) {
 				running = false;
 			}

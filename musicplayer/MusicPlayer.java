@@ -23,41 +23,57 @@ public class MusicPlayer {
 	}
 	
 	public boolean isLooping() {
-		return this.looping;
+		return looping;
 	}
 	
 	public void loop() {
-		if (!this.looping) {
-			this.looping = true;
+		if (!looping) {
+			looping = true;
 		}
 		else {
 			
-			this.looping = false;
+			looping = false;
 		}
 	}
 	
 	public void play() {
-		this.clip.start();
+		clip.start();
 		
 		// Pausing clears loop status so it must be re-enabled in play
-		if (this.looping) {
-			this.clip.loop(Clip.LOOP_CONTINUOUSLY);
+		if (looping) {
+			clip.loop(Clip.LOOP_CONTINUOUSLY);
 		}
 		else {
-			this.clip.loop(0);
+			clip.loop(0);
 		}
 	}
 	
 	public void stop() {
-		this.clip.stop();
+		clip.stop();
 	}
 	
 	public void restart() {
-		this.clip.setMicrosecondPosition(0);
-		this.play();
+		clip.setMicrosecondPosition(0);
+		play();
+	}
+	
+	public void skipForward() {
+		clip.setMicrosecondPosition(clip.getMicrosecondPosition() + 10 * (1000000));
+		if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
+			clip.setMicrosecondPosition(0);
+		}
+		System.out.println(clip.getMicrosecondPosition());
+	}
+	
+	public void skipBack() {
+		clip.setMicrosecondPosition(clip.getMicrosecondPosition() - 10 * (1000000));
+		if (clip.getMicrosecondPosition() < 0) {
+			clip.setMicrosecondPosition(0);
+		}
+		System.out.println(clip.getMicrosecondPosition());
 	}
 	
 	public void close() {
-		this.clip.close();
+		clip.close();
 	}
 }
