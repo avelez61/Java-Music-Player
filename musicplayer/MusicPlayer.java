@@ -4,7 +4,6 @@ import java.io.File;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
-import java.util.ArrayList;
 import javax.sound.sampled.LineEvent;
 import javax.sound.sampled.LineListener;
 
@@ -14,7 +13,7 @@ public class MusicPlayer implements LineListener {
 	private boolean paused;
 	private boolean disableAutoPlay;
 	private boolean triggerAutoPlay;
-	private ArrayList<Song> playList;
+	private PlayList playList;
 	private int currentSongIndex;
 	
 	
@@ -22,7 +21,7 @@ public class MusicPlayer implements LineListener {
 		this.clip = null;
 		this.looping = false;
 		this.paused = true;
-		this.playList = new ArrayList<Song>();
+		this.playList = new PlayList();
 		this.currentSongIndex = 0;
 		this.disableAutoPlay = false;
 	}
@@ -32,7 +31,7 @@ public class MusicPlayer implements LineListener {
 		
 		if (event.getType() == LineEvent.Type.STOP && !paused && !looping && !disableAutoPlay) {
 			currentSongIndex++;
-			if (currentSongIndex < playList.size()) {
+			if (currentSongIndex < playList.getSize()) {
 				triggerAutoPlay = true;
 				play();
 			}
@@ -79,7 +78,7 @@ public class MusicPlayer implements LineListener {
 		if (playList.isEmpty()) { return; }
 		
 		if ((clip == null || triggerAutoPlay)) {
-			this.loadSong(playList.get(this.currentSongIndex));
+			this.loadSong(playList.getSong(this.currentSongIndex));
 		}
 		clip.start();
 		
@@ -122,12 +121,12 @@ public class MusicPlayer implements LineListener {
 	}
 	
 	public void addSong(String title, String artist, String filePath) {		
-		playList.add(new Song(title, artist, filePath));
+		playList.addSong(new Song(title, artist, filePath));
 	}
 	
 	public void removeSong(int index) {
 		if (playList.isEmpty()) { return; }
-		if (index < 0 || index >= playList.size()) { return; }
+		if (index < 0 || index >= playList.getSize()) { return; }
 		
 		disableAutoPlay = true;
 		if (index == currentSongIndex) {
@@ -140,7 +139,7 @@ public class MusicPlayer implements LineListener {
 		}
 		disableAutoPlay = false;
 		
-		playList.remove(index);
+		playList.removeSong(index);
 	}
 	
 	public void skipSong() {
@@ -151,7 +150,7 @@ public class MusicPlayer implements LineListener {
 		currentSongIndex++;
 		clip.close();
 		clip = null;
-		if (currentSongIndex < playList.size()) {
+		if (currentSongIndex < playList.getSize()) {
 			play();
 		}
 		disableAutoPlay = false;
