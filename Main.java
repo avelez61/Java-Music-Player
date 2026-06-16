@@ -37,11 +37,26 @@ public class Main {
 				player.loop();
 			}
 			else if (input.equals("SKIP FORWARD")) {
+				System.out.println("Skipped Forward 10 Seconds");
 				player.skipForward();
 			}
 			else if (input.equals("SKIP BACK")) {
+				System.out.println("Skipped Back 10 Seconds");
 				player.skipBack();
 			}
+			else if (input.equals("ADD SONG")) {
+				System.out.println("Added Song");
+				player.addSong("Problems", "Alterclad", "Problems.wav");
+			}
+			else if (input.equals("ADD SONG 2")) {
+				System.out.println("Added Song");
+				player.addSong("Ninomae Ina'nis", "Tako Takeover", "TakoTakeover.wav");
+			}
+			else if (input.equals("ADD SONG 3")) {
+				System.out.println("Added Song");
+				player.addSong("Nerrisa Ravencroft", "Alterclad", "Birdbrain.wav");
+			}
+			
 			else if (input.equals("EXIT")) {
 				running = false;
 			}

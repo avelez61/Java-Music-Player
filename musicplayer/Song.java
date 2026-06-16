@@ -1,12 +1,14 @@
+package musicplayer;
+
 public class Song {
 	private String title;
 	private String artist;
-	private int duration;
+	private String filePath;
 	
-	public Song(String title, String artist, int duration) {
+	public Song(String title, String artist, String filePath) {
 		this.title = title;
 		this.artist = artist;
-		this.duration = duration;
+		this.filePath = filePath;
 	}
 	
 	public String getTitle() {
@@ -17,7 +19,7 @@ public class Song {
 		return artist;
 	}
 	
-	public int getDuration() {
-		return duration;
+	public String getFilePath() {
+		return filePath;
 	}
 }
