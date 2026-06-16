@@ -12,6 +12,7 @@ public class MusicPlayer implements LineListener {
 	private Clip clip;
 	private boolean looping;
 	private boolean paused;
+	private boolean disableAutoPlay;
 	private boolean triggerAutoPlay;
 	private ArrayList<Song> playList;
 	private int currentSongIndex;
@@ -23,12 +24,13 @@ public class MusicPlayer implements LineListener {
 		this.paused = true;
 		this.playList = new ArrayList<Song>();
 		this.currentSongIndex = 0;
+		this.disableAutoPlay = false;
 	}
 	
 	@Override
 	public void update(LineEvent event) {
 		
-		if (event.getType() == LineEvent.Type.STOP && !paused && !looping) {
+		if (event.getType() == LineEvent.Type.STOP && !paused && !looping && !disableAutoPlay) {
 			currentSongIndex++;
 			if (currentSongIndex < playList.size()) {
 				triggerAutoPlay = true;
@@ -121,6 +123,28 @@ public class MusicPlayer implements LineListener {
 	
 	public void addSong(String title, String artist, String filePath) {		
 		playList.add(new Song(title, artist, filePath));
+	}
+	
+	public void removeSong(int index) {
+		if (playList.isEmpty()) { return; }
+		if (index < 0 || index >= playList.size()) { return; }
+		
+		disableAutoPlay = true;
+		if (index == currentSongIndex) {
+			clip.close();
+			clip = null;
+			currentSongIndex = 0;
+		}
+		else if (index > currentSongIndex) {
+			currentSongIndex--;
+		}
+		disableAutoPlay = false;
+		
+		playList.remove(index);
+	}
+	
+	public void skipSong() {
+
 	}
 	
 	public void close() {

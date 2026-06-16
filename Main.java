@@ -45,16 +45,27 @@ public class Main {
 				player.skipBack();
 			}
 			else if (input.equals("ADD SONG")) {
+				System.out.println("Enter a song title: ");
+				String title = scanner.nextLine();
+				
+				System.out.println("Enter the artist: ");
+				String artist = scanner.nextLine();
+				
+				System.out.println("Enter the file path: ");
+				String filePath = scanner.nextLine();
+				
 				System.out.println("Added Song");
-				player.addSong("Problems", "Alterclad", "Problems.wav");
+				player.addSong(title, artist, filePath);
 			}
-			else if (input.equals("ADD SONG 2")) {
-				System.out.println("Added Song");
-				player.addSong("Ninomae Ina'nis", "Tako Takeover", "TakoTakeover.wav");
+			else if (input.equals("REMOVE SONG")) {
+				System.out.print("Enter a song number: ");
+				int index = Integer.parseInt(scanner.nextLine()) - 1;
+				
+				System.out.println("Removed Song");
+				player.removeSong(index);
 			}
-			else if (input.equals("ADD SONG 3")) {
-				System.out.println("Added Song");
-				player.addSong("Nerrisa Ravencroft", "Alterclad", "Birdbrain.wav");
+			else if (input.equals("SKIP")) {
+				player.skipSong();
 			}
 			
 			else if (input.equals("EXIT")) {
