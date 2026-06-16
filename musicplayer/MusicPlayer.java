@@ -157,6 +157,20 @@ public class MusicPlayer implements LineListener {
 		disableAutoPlay = false;
 	}
 	
+	public void previousSong() {
+		if (playList.isEmpty()) { return; }
+		if (clip == null) { return; }
+		
+		disableAutoPlay = true;
+		currentSongIndex--;
+		clip.close();
+		clip = null;
+		if (currentSongIndex >= 0) {
+			play();
+		}
+		disableAutoPlay = false;
+	}
+	
 	public void close() {
 		if (clip == null) { return; }
 		clip.close();

@@ -68,6 +68,10 @@ public class Main {
 				System.out.println("Skipped Song");
 				player.skipSong();
 			}
+			else if (input.equals("PREVIOUS")) {
+				System.out.println("Moved to Previous Song");
+				player.previousSong();
+			}
 			
 			else if (input.equals("EXIT")) {
 				running = false;
