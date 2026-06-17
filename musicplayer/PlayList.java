@@ -2,6 +2,12 @@ package musicplayer;
 
 import java.util.ArrayList;
 
+/*
+	Wrapper class over an ArrayList
+	The benefit of this class is that the underlying structure can
+	change to something like a linked list for example and the implementation
+	of the public interface does not need to change.
+*/ 
 public class PlayList {
 	private ArrayList<Song> songs;
 	private int currentSongIndex;

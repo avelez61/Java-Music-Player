@@ -19,7 +19,6 @@ public class MusicPlayer implements LineListener {
 	
 	public MusicPlayer(String filePath) {		
 		this.clip = null;
-		this.looping = false;
 		this.paused = true;
 		this.playList = new PlayList();
 		this.currentSongIndex = 0;
@@ -28,8 +27,7 @@ public class MusicPlayer implements LineListener {
 	
 	@Override
 	public void update(LineEvent event) {
-		
-		if (event.getType() == LineEvent.Type.STOP && !paused && !looping && !disableAutoPlay) {
+		if (event.getType() == LineEvent.Type.STOP && !paused && !disableAutoPlay) {
 			currentSongIndex++;
 			if (currentSongIndex < playList.getSize()) {
 				triggerAutoPlay = true;
@@ -52,72 +50,7 @@ public class MusicPlayer implements LineListener {
 			System.out.println("Error reading file");
 		}
 		clip.addLineListener(this);
-		clip.setLoopPoints(0, clip.getFrameLength() - 1);
-		triggerAutoPlay = false;
-	}
-	
-	public boolean isLooping() {
-		return looping;
-	}
-	
-	public void loop() {
-		if (clip == null) { return; }
-		
-		if (!looping) {
-			looping = true;
-			clip.loop(Clip.LOOP_CONTINUOUSLY);
-		}
-		else {
-			
-			looping = false;
-			clip.loop(0);
-		}
-	}
-	
-	public void play() {
-		if (playList.isEmpty()) { return; }
-		
-		if ((clip == null || triggerAutoPlay)) {
-			this.loadSong(playList.getSong(this.currentSongIndex));
-		}
-		clip.start();
-		
-		// Pausing clears loop status so it must be re-enabled in play
-		if (looping) {
-			clip.loop(Clip.LOOP_CONTINUOUSLY);
-		}
-		else {
-			clip.loop(0);
-		}
-		paused = false;
-	}
-	
-	public void stop() {
-		if (clip == null) { return; }
-		clip.stop();
-		paused = true;
-	}
-	
-	public void restart() {
-		if (clip == null) { return; }
-		clip.setMicrosecondPosition(0);
-		play();
-	}
-	
-	public void skipForward() {
-		if (clip == null) { return; }
-		clip.setMicrosecondPosition(clip.getMicrosecondPosition() + 10 * (1000000));
-		if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
-			clip.setMicrosecondPosition(0);
-		}
-	}
-	
-	public void skipBack() {
-		if (clip == null) { return; }
-		clip.setMicrosecondPosition(clip.getMicrosecondPosition() - 10 * (1000000));
-		if (clip.getMicrosecondPosition() < 0) {
-			clip.setMicrosecondPosition(0);
-		}
+		triggerAutoPlay = false; // may not be necessary after called by skipSong
 	}
 	
 	public void addSong(String title, String artist, String filePath) {		
@@ -134,7 +67,7 @@ public class MusicPlayer implements LineListener {
 			clip = null;
 			currentSongIndex = 0;
 		}
-		else if (index > currentSongIndex) {
+		else if (index < currentSongIndex) {
 			currentSongIndex--;
 		}
 		disableAutoPlay = false;
@@ -146,11 +79,12 @@ public class MusicPlayer implements LineListener {
 		if (playList.isEmpty()) { return; }
 		if (clip == null) { return; }
 		
-		disableAutoPlay = true;
-		currentSongIndex++;
+		disableAutoPlay = true; // Disable autoplay to prevent clip.close from calling update
 		clip.close();
 		clip = null;
-		if (currentSongIndex < playList.getSize()) {
+		
+		if (currentSongIndex < playList.getSize() - 1) {
+			currentSongIndex++;
 			play();
 		}
 		disableAutoPlay = false;
@@ -160,14 +94,58 @@ public class MusicPlayer implements LineListener {
 		if (playList.isEmpty()) { return; }
 		if (clip == null) { return; }
 		
-		disableAutoPlay = true;
-		currentSongIndex--;
+		disableAutoPlay = true;  // Disable autoplay to prevent clip.close from calling update
 		clip.close();
 		clip = null;
-		if (currentSongIndex >= 0) {
+		
+		if (currentSongIndex > 0) {
+			currentSongIndex--;
 			play();
 		}
+		
 		disableAutoPlay = false;
+	}
+	
+	public void play() {
+		if (playList.isEmpty()) { return; }
+		
+		if ((clip == null || triggerAutoPlay)) {
+			this.loadSong(playList.getSong(this.currentSongIndex));
+		}
+		clip.start();
+		paused = false;
+	}
+	
+	public void stop() {
+		if (playList.isEmpty()) { return; }
+		if (clip == null) { return; }
+		
+		paused = true;
+		clip.stop();
+	}
+	
+	public void restart() {
+		if (playList.isEmpty()) { return; }
+		if (clip == null) { return; }
+		
+		clip.setMicrosecondPosition(0);
+		play();
+	}
+	
+	public void skipForward() {
+		if (clip == null) { return; }
+		clip.setMicrosecondPosition(clip.getMicrosecondPosition() + 10 * (1000000));
+		if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
+			clip.setMicrosecondPosition(0);
+		}
+	}
+	
+	public void skipBackward() {
+		if (clip == null) { return; }
+		clip.setMicrosecondPosition(clip.getMicrosecondPosition() - 10 * (1000000));
+		if (clip.getMicrosecondPosition() < 0) {
+			clip.setMicrosecondPosition(0);
+		}
 	}
 	
 	public void close() {
