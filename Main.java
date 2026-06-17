@@ -58,13 +58,9 @@ public class Main {
 				case "RESTART":
 					player.restart();
 					break;
-				
-				case "SKIP FORWARD":
-					player.skipForward();
-					break;
 					
-				case "SKIP BACKWARD":
-					player.skipBackward();
+				case "LIST":
+					player.printList();
 					break;
 				
 				case "EXIT":
@@ -73,7 +69,8 @@ public class Main {
 					
 				case "HELP":
 					System.out.println("List of available commands:");
-					System.out.println(" ADD SONG, REMOVE SONG, SKIP, PREVIOUS, PLAY, PAUSE, RESTART, SKIP FORWARD, SKIP BACKWARD, EXIT");
+					System.out.println("ADD SONG, REMOVE SONG, SKIP, PREVIOUS, PLAY, PAUSE, RESTART, LIST, EXIT");
+					break;
 					
 				default:
 					System.out.println("Command not recognized, try typing in 'HELP'");

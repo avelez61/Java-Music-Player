@@ -9,7 +9,6 @@ import javax.sound.sampled.LineListener;
 
 public class MusicPlayer implements LineListener {
 	private Clip clip;
-	private boolean looping;
 	private boolean paused;
 	private boolean disableAutoPlay;
 	private boolean triggerAutoPlay;
@@ -17,7 +16,7 @@ public class MusicPlayer implements LineListener {
 	private int currentSongIndex;
 	
 	
-	public MusicPlayer(String filePath) {		
+	public MusicPlayer() {		
 		this.clip = null;
 		this.paused = true;
 		this.playList = new PlayList();
@@ -46,10 +45,10 @@ public class MusicPlayer implements LineListener {
 			AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
 			clip = AudioSystem.getClip();
 			clip.open(audioStream);
+			clip.addLineListener(this);
 		} catch(Exception e) {
 			System.out.println("Error reading file");
 		}
-		clip.addLineListener(this);
 		triggerAutoPlay = false; // may not be necessary after called by skipSong
 	}
 	
@@ -132,20 +131,8 @@ public class MusicPlayer implements LineListener {
 		play();
 	}
 	
-	public void skipForward() {
-		if (clip == null) { return; }
-		clip.setMicrosecondPosition(clip.getMicrosecondPosition() + 10 * (1000000));
-		if (clip.getMicrosecondPosition() >= clip.getMicrosecondLength()) {
-			clip.setMicrosecondPosition(0);
-		}
-	}
-	
-	public void skipBackward() {
-		if (clip == null) { return; }
-		clip.setMicrosecondPosition(clip.getMicrosecondPosition() - 10 * (1000000));
-		if (clip.getMicrosecondPosition() < 0) {
-			clip.setMicrosecondPosition(0);
-		}
+	public void printList() {
+		playList.printList();
 	}
 	
 	public void close() {

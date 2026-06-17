@@ -35,4 +35,14 @@ public class PlayList {
 	public boolean isEmpty() {
 		return songs.isEmpty();
 	}
+	
+	public void printList() {
+		if (songs.size() == 0) {
+			System.out.println("Playlist Empty");
+		}
+		
+		for (Song song : songs) {
+			System.out.println("Title: " + song.getTitle() + " " + "Artist: " + song.getArtist());
+		}
+	}
 }
