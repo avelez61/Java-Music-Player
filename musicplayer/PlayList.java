@@ -11,21 +11,48 @@ import java.util.ArrayList;
 public class PlayList {
 	private ArrayList<Song> songs;
 	private int currentSongIndex;
-	
+
 	public PlayList() {
 		this.songs = new ArrayList<Song>();
+		this.currentSongIndex = 0;
 	}
 	
+	public int getCurrentSongIndex() {
+		return currentSongIndex;
+	}
+
+	public void setCurrentSongIndex(int index) {
+		currentSongIndex = index;
+	}
+
+	public void incrementIndex() {
+		if (currentSongIndex < getSize() - 1) {
+			currentSongIndex++;
+		}
+	}
+
+	public void decrementIndex() {
+		if (currentSongIndex > 0) {
+			currentSongIndex--;
+		}
+	}
+
 	public void addSong(Song song) {
 		songs.add(song);
 	}
 	
 	public void removeSong(int index) {
+		if (isEmpty()) { return; }
+		if (index < 0 || index >= getSize()) { return; }
+
+		if (index < currentSongIndex) {
+			decrementIndex();
+		}
 		songs.remove(index);
 	}
 	
-	public Song getSong(int index) {
-		return songs.get(index);
+	public Song getCurrentSong() {
+		return songs.get(currentSongIndex);
 	}
 	
 	public int getSize() {

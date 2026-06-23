@@ -27,12 +27,10 @@ public class MusicPlayer implements LineListener {
 	@Override
 	public void update(LineEvent event) {
 		if (event.getType() == LineEvent.Type.STOP && !paused && !disableAutoPlay) {
-			currentSongIndex++;
-			if (currentSongIndex < playList.getSize()) {
-				triggerAutoPlay = true;
-				play();
-				triggerAutoPlay = false; 
-			}
+			playList.incrementIndex();
+			triggerAutoPlay = true;
+			play();
+			triggerAutoPlay = false; 
 		}
 	}
 	
@@ -66,15 +64,9 @@ public class MusicPlayer implements LineListener {
 	}
 	
 	public void removeSong(int index) {
-		if (playList.isEmpty()) { return; }
-		if (index < 0 || index >= playList.getSize()) { return; }
-		
-		if (index == currentSongIndex) {
+		if (index == playList.getCurrentSongIndex()) {
 			unloadSong();
-			currentSongIndex = 0;
-		}
-		else if (index < currentSongIndex) {
-			currentSongIndex--;
+			playList.setCurrentSongIndex(0);
 		}
 		
 		playList.removeSong(index);
@@ -84,29 +76,23 @@ public class MusicPlayer implements LineListener {
 		if (playList.isEmpty()) { return; }
 		
 		unloadSong();
-
-		if (currentSongIndex < playList.getSize() - 1) {
-			currentSongIndex++;
-			play();
-		}
+		playList.incrementIndex();
+		play();
 	}
 	
 	public void previousSong() {
 		if (playList.isEmpty()) { return; }
 		
 		unloadSong();
-		
-		if (currentSongIndex > 0) {
-			currentSongIndex--;
-			play();
-		}
+		playList.decrementIndex();
+		play();
 	}
 	
 	public void play() {
 		if (playList.isEmpty()) { return; }
 		
 		if ((clip == null || triggerAutoPlay)) {
-			loadSong(playList.getSong(this.currentSongIndex));
+			loadSong(playList.getCurrentSong());
 		}
 		clip.start();
 		paused = false;
