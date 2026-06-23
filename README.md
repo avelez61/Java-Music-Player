@@ -8,14 +8,23 @@ Download the .jar file from the releases and place the file in a directory with 
 The CLI can run the following commands:
 
 ADD SONG - Prompts the user to enter a song title, artist, and file path for the .wav file
+
 REMOVE SONG - Prompts the user to enter a song index number which will remove the song at that index from the playlist
+
 SKIP - The player skips to the next song in the playlist
+
 PREVIOUS - The player goes back to the previous song in the playlist
+
 PLAY - Plays the current song
+
 PAUSE - Pauses the current song
+
 RESTART - Restarts the current song
+
 LIST - Lists all the songs in the current playlist
+
 EXIT - Exits the program
+
 HELP - Prints the list of commands
 
 ## Implementation
