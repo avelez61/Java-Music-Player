@@ -31,6 +31,7 @@ public class MusicPlayer implements LineListener {
 			if (currentSongIndex < playList.getSize()) {
 				triggerAutoPlay = true;
 				play();
+				triggerAutoPlay = false; 
 			}
 		}
 	}
@@ -49,7 +50,15 @@ public class MusicPlayer implements LineListener {
 		} catch(Exception e) {
 			System.out.println("Error reading file");
 		}
-		triggerAutoPlay = false; // may not be necessary after called by skipSong
+	}
+
+	private void unloadSong() {
+		if (clip == null) { return; }
+
+		disableAutoPlay = true; // Disable autoplay to prevent clip.close from calling update
+		clip.close();
+		clip = null;
+		disableAutoPlay = false;
 	}
 	
 	public void addSong(String title, String artist, String filePath) {		
@@ -60,56 +69,44 @@ public class MusicPlayer implements LineListener {
 		if (playList.isEmpty()) { return; }
 		if (index < 0 || index >= playList.getSize()) { return; }
 		
-		disableAutoPlay = true;
 		if (index == currentSongIndex) {
-			clip.close();
-			clip = null;
+			unloadSong();
 			currentSongIndex = 0;
 		}
 		else if (index < currentSongIndex) {
 			currentSongIndex--;
 		}
-		disableAutoPlay = false;
 		
 		playList.removeSong(index);
 	}
 	
 	public void skipSong() {
 		if (playList.isEmpty()) { return; }
-		if (clip == null) { return; }
 		
-		disableAutoPlay = true; // Disable autoplay to prevent clip.close from calling update
-		clip.close();
-		clip = null;
-		
+		unloadSong();
+
 		if (currentSongIndex < playList.getSize() - 1) {
 			currentSongIndex++;
 			play();
 		}
-		disableAutoPlay = false;
 	}
 	
 	public void previousSong() {
 		if (playList.isEmpty()) { return; }
-		if (clip == null) { return; }
 		
-		disableAutoPlay = true;  // Disable autoplay to prevent clip.close from calling update
-		clip.close();
-		clip = null;
+		unloadSong();
 		
 		if (currentSongIndex > 0) {
 			currentSongIndex--;
 			play();
 		}
-		
-		disableAutoPlay = false;
 	}
 	
 	public void play() {
 		if (playList.isEmpty()) { return; }
 		
 		if ((clip == null || triggerAutoPlay)) {
-			this.loadSong(playList.getSong(this.currentSongIndex));
+			loadSong(playList.getSong(this.currentSongIndex));
 		}
 		clip.start();
 		paused = false;
